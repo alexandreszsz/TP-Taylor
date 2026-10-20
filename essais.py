@@ -64,6 +64,27 @@ plt.show()
 #Q2
 diff=np.abs(Y-Y2)
 #Calcul de l'écart entre Y et Y2
-I_correct=X[diff<=0.003]
+I_correct=X[diff<=0.001]
 #On renvoie l'intervalle des X tels que |Y-Y2|<=10^(-3)
-print(I_correct[0],I_correct[-1]) #On obtient l'intervalle approché : [-2.881761682240261 2.8817616822402616]
+
+x=I_correct[-1]-I_correct[0] #On obtient l'intervalle approché : [-2.881761682240261 2.8817616822402616]
+print(f"On a {100*(x/(4*np.pi))}% du domaine qui est proche de l'approximation à 10^-3 près")
+#Q3
+plt.plot(taylor2(X,np.cos,0))
+plt.plot(np.cos(X))
+plt.show()
+#On obtient une droite horizontale y=1.
+
+def custom(X):
+    """retourne 2 * sin(X) + cos(X/4)"""
+    return 2*np.sin(X)+np.cos(X/4)
+Y3 = custom(X)
+Y4 = taylor2(X, custom, 14)
+plt.plot(Y3)
+plt.plot(Y4)
+plt.show()
+#Même méthode que précédement.
+diff2=np.abs(Y3-Y4)
+I_correct2=X[diff2<=0.001]
+x2=I_correct2[-1]-I_correct2[0]
+print(f"On a {100*(x2/(4*np.pi))}% du domaine qui est proche de l'approximation à 10^-3 près")
