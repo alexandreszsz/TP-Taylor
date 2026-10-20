@@ -67,4 +67,44 @@ st.pyplot(fig)
 
 def taux_coincidence(Y, Y_taylor, seuil):
     """Renvoie la proportion de l'intervalle où |Y-Y_taylor| est inférieur au seuil"""
-    
+    diff=np.abs(Y-Y_taylor)
+    #Calcul du tableau des différences
+    I_bien=X[diff<=seuil]
+    #Calcul de l'intervalle où l'écart est sous le seuil
+    return (I_bien[-1]-I_bien[0])*100/largeur
+    #On retourne ce pourcentage.
+
+with st.sidebar:
+    seuil=st.slider("Choisissez un seuil de forme 10^(-n)",2,6)
+st.write(f"On obtient un taux de coïncidence de {taux_coincidence(Y,Y_taylor,10**(-seuil))}")
+
+#Affichage de l'erreur
+bol=st.selectbox("Afficher l'erreur",["Oui","Non"])
+if bol=="Oui":
+    erreur=np.abs(Y-Y_taylor)
+    fig, ax = plt.subplots()
+    plt.yscale('log')
+    ax.plot(erreur)
+    st.pyplot(fig)
+
+
+#Ajout d'ordre à la comparaison
+
+a=st.selectbox("Ajouter cet ordre à la comparaison",["Oui","Non"])
+
+if "ordres" not in st.session_state:
+    st.session_state.ordres = []#On initialise la liste des ordres
+
+if a=="Oui":
+    st.session_state.ordres.append(ordre)#On ajoute l'ordre si c'est demandé
+
+fig, ax = plt.subplots()
+ax.plot(Y)
+for k in st.session_state.ordres : 
+    ax.plot(taylor2(X,FONCTIONS[f],k)) #On plot tous les ordres demandés
+st.pyplot(fig)
+
+b=st.selectbox("Réinitialiser les ordres affichés",["Oui","Non"])
+
+if b=="Oui":
+    st.session_state.ordres = []#On réinitialise la liste des ordres.
